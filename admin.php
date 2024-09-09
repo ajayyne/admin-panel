@@ -33,8 +33,22 @@ if (isset($_SESSION["login"]) && $_SESSION["login"]) {
         $updateQuery = "UPDATE adminPanel SET userName='$_POST[username]', userPassword='$_POST[password]' WHERE adminID='$_POST[hidden]'";
         //sending query to db
         $update = mysqli_query($connection, $updateQuery);
-        //creating new query to show new results
+        //showing results
         if($update)
+        {
+            header("Location:admin.php");
+        }else{
+            echo "error";
+        }
+    }
+
+    if (isset($_POST['delete'])) {
+        //creating query
+        $deleteQuery = "DELETE FROM adminPanel WHERE adminID='$_POST[hidden]'";
+        //sending query to db
+        $delete = mysqli_query($connection, $deleteQuery);
+        //showing results
+        if($delete)
         {
             header("Location:admin.php");
         }else{
