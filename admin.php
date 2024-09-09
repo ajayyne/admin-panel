@@ -19,14 +19,21 @@ if (isset($_SESSION["login"]) && $_SESSION["login"]) {
     while ($row = mysqli_fetch_array($dbResult, MYSQLI_ASSOC)) {
         echo "<form method='POST'>";
         echo "<tr>";
-        echo "<td><input type='text' name='username' value='" . $row['userName'] . "'</td>";
-        echo "<td><input type='text' name='password' value='" . $row["userPassword"] . "'</td>";
-        echo "<td><input type='hidden' name='hidden' value='" . $row["adminID"] . "'</td>";
-        echo "<td><input type='submit' name='update' value='update'</td>";
-        echo "<td><input type='submit' name='delete' value='delete'</td>";
-        echo "</tr>";
+        echo "<td><input type='text' name='username' value='" . $row['userName'] . "'></td>";
+        echo "<td><input type='text' name='password' value='" . $row["userPassword"] . "'></td>";
+        echo "<td><input type='hidden' name='hidden' value='" . $row["adminID"] . "'></td>";
+        echo "<td><input type='submit' name='update' value='update'></td>";
+        echo "<td><input type='submit' name='delete' value='delete'></td>";
         echo "</form>";
     }
+
+        echo "<form method='POST'>";
+        echo "<tr>";
+        echo "<td><input type='text' name='addname' value=''></td>";
+        echo "<td><input type='text' name='addpassword' value=''></td>";
+        echo "<td><input type='submit' name='adduser' value='add'></td>";
+        echo "</tr>";
+        echo "</form>";
 
     if (isset($_POST['update'])) {
         //creating query
@@ -56,12 +63,32 @@ if (isset($_SESSION["login"]) && $_SESSION["login"]) {
         }
     }
 
+    if ($_POST['addname'] != "" && $_POST['addpassword'] != "") {
+        //insert data from form to the member database
+        $addUser = mysqli_query($connection, "SELECT * FROM adminPanel WHERE userName='$_POST[addname]'");
+        if (mysqli_num_rows($addUser) > 0) {
+            echo "User already exists";
+        } else {
+            $newUser = "INSERT INTO adminPanel (userName, userPassword) VALUES ('$_POST[addname]', '$_POST[addpassword]')";
+            if (mysqli_query($connection, $newUser)) {
+                header("Location:admin.php");
+            } else {
+                echo "Error: " . mysqli_error($connection);
+            }
+        }
+    }
+    
+    
+    
+    
     mysqli_close($connection);
-
 } else {
     header("Location:login.php");
     exit();
 }
+    
+
+
 
 
 
